@@ -1,0 +1,8 @@
+/* ImageSlider.css */
+.image-slider {
+  overflow: hidden;
+}
+
+.image-slider img {
+  transition: transform 0.5s ease-in-out;
+}
