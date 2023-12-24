@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useHistory, useNavigate } from "react-router-dom";
+import Cookies from "js-cookies";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 
 export default function Login({}) {
+  const history = useHistory();
   const navigate = useNavigate();
   let message = "";
   const [form, setForm] = useState({
@@ -16,8 +18,10 @@ export default function Login({}) {
       ...form,
       [e.target.name]: e.target.value,
     });
+    Cookies.setItem('user', form.email );
+    history.push('/dashboard')
   };
-
+  
   const login = (event) => {
     event.preventDefault();
     const { email, password } = form;

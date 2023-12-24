@@ -1,18 +1,20 @@
 import express from "express";
-import dbConnect from "./db/dbConnect.js";
+import authdbConnect from "./db/authdbConnect.js";
 import bcrypt from "bcrypt";
 import User from "./model/User.js";
+import Book from "./model/Book.js";
 import jwt from "jsonwebtoken";
 import auth from "./auth.js";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 const app = express();
-const router = express.Router();
 
-dbConnect();
+authdbConnect();
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(cors());
+app.use(cookieParser());
 
 // free endpoint
 app.get("/free-endpoint", auth, (request, response) => {
@@ -76,11 +78,11 @@ app.post("/register", async (request, response) => {
   try {
     const { name, email, ...data } = request.body;
     const existingUser = await User.findOne({ email });
-
+    
     if (existingUser) {
       return response.status(404).json({ message: "USER_ALREADY_EXISTS" });
     }
-
+    
     const hashedPassword = await bcrypt.hash(data.password, 10);
     const newUser = new User({
       ...data,
@@ -91,6 +93,21 @@ app.post("/register", async (request, response) => {
     console.log(name);
     await newUser.save();
     response.status(200).json({ message: "SIGNUP_SUCCESS" });
+  } catch (err) {
+    response.status(500).json({ message: err });
+  }
+});
+
+app.post("/book", async (request, response) => {
+  try {
+    const { ...data } = request.body;
+    
+    const newBook = new Book({
+      ...data
+    });
+    
+    await newBook.save();
+    response.status(200).json({ message: "SUCCESS" });
   } catch (err) {
     response.status(500).json({ message: err });
   }

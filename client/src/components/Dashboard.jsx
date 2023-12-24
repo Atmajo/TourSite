@@ -7,7 +7,7 @@ import '../index.css';
 const Home = () => {
   return (
     <div className="select-none">
-      <Navbar prop="login"/>
+      <Navbar prop="logout"/>
       <main className="flex flex-row px-5 py-3 m-8 gap-10 border-b rounded-xl shadow-xl">
         <ImageSlider />
         <div className="flex flex-col">
